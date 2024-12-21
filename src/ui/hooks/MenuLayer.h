@@ -66,41 +66,61 @@ class $modify(MyMenuLayer, MenuLayer) {
         float scale = CCDirector::sharedDirector()->getContentScaleFactor()/4;
 
 		#ifdef GEODE_IS_MACOS
-		CCNode* bgContainer = CCNode::create();
-		CCSprite* bg0 = CCSprite::create("panorama_0.png"_spr);
-		CCSprite* bg1 = CCSprite::create("panorama_1.png"_spr);
-		CCSprite* bg2 = CCSprite::create("panorama_2.png"_spr);
-		CCSprite* bg3 = CCSprite::create("panorama_3.png"_spr);
+			CCNode* bgContainer = CCNode::create();
 
-		float scaleFactor = winSize.height / bg0->getContentHeight();
+			std::string panoramaVersion = Mod::get()->getSettingValue<std::string>("panorama");
+			std::string prefix;
 
-		bg0->setScale(scaleFactor);
-		bg1->setScale(scaleFactor);
-		bg2->setScale(scaleFactor);
-		bg3->setScale(scaleFactor);
+			if (panoramaVersion == "Tricky Trials") {
+				prefix = "trickytrials";
+			} else if (panoramaVersion == "The Garden Awakens") {
+				prefix = "thegardenawakens";
+			} else if (panoramaVersion == "Trails & Tales") {
+				prefix = "trailsandtales";
+			} else if (panoramaVersion == "The Wild Update") {
+				prefix = "thewild";
+			} else if (panoramaVersion == "Caves & Cliffs: Part II") {
+				prefix = "cavesandcliffs2";
+			} else if (panoramaVersion == "Caves & Cliffs: Part I") {
+				prefix = "cavesandcliffs1";
+			} else {
+				prefix = "trickytrials";
+			}
 
-		bgContainer->setContentSize(bg0->getScaledContentSize());
-		bgContainer->setContentWidth(bg0->getScaledContentWidth() * 4);
+			CCSprite* bg0 = CCSprite::create(fmt::format("{}{}_panorama_0.png", "zalphalaneous.minecraft/", prefix).c_str());
+			CCSprite* bg1 = CCSprite::create(fmt::format("{}{}_panorama_1.png", "zalphalaneous.minecraft/", prefix).c_str());
+			CCSprite* bg2 = CCSprite::create(fmt::format("{}{}_panorama_2.png", "zalphalaneous.minecraft/", prefix).c_str());
+			CCSprite* bg3 = CCSprite::create(fmt::format("{}{}_panorama_3.png", "zalphalaneous.minecraft/", prefix).c_str());
 
-		bgContainer->addChild(bg0);
-		bgContainer->addChild(bg1);
-		bgContainer->addChild(bg2);
-		bgContainer->addChild(bg3);
+			float scaleFactor = winSize.height / bg0->getContentHeight();
 
-		RowLayout* layout = RowLayout::create();
-		layout->setGap(0);
-		layout->setAutoScale(false);
+			bg0->setScale(scaleFactor);
+			bg1->setScale(scaleFactor);
+			bg2->setScale(scaleFactor);
+			bg3->setScale(scaleFactor);
 
-		bgContainer->setLayout(layout);
-		bgContainer->updateLayout();
-		bgContainer->setAnchorPoint({0.5f, 0.5f});
-		bgContainer->setPosition(winSize/2);
+			bgContainer->setContentSize(bg0->getScaledContentSize());
+			bgContainer->setContentWidth(bg0->getScaledContentWidth() * 4);
 
-		this->addChild(bgContainer);
+			bgContainer->addChild(bg0);
+			bgContainer->addChild(bg1);
+			bgContainer->addChild(bg2);
+			bgContainer->addChild(bg3);
+
+			RowLayout* layout = RowLayout::create();
+			layout->setGap(0);
+			layout->setAutoScale(false);
+
+			bgContainer->setLayout(layout);
+			bgContainer->updateLayout();
+			bgContainer->setAnchorPoint({0.5f, 0.5f});
+			bgContainer->setPosition(winSize / 2);
+
+			this->addChild(bgContainer);
 		#else
-		Panorama* panorama = Panorama::create();
-		panorama->setID("minecraft-panorama"_spr);
-		this->addChild(panorama);
+			Panorama* panorama = Panorama::create();
+			panorama->setID("minecraft-panorama"_spr);
+			this->addChild(panorama);
 		#endif
 
 		Utils::getNodeSafe(this, "main-menu")->setVisible(false);
